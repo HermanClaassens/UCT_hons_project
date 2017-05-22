@@ -1,0 +1,43 @@
+---
+fontsize: 12pt
+geometry: margin = 1.5in
+header-includes:
+  - \usepackage{setspace}
+  - \onehalfspacing
+output:
+  pdf_document:
+    number_sections: TRUE
+    keep_tex: TRUE
+    fig_width: 3.5 
+    fig_height: 3.5
+
+---
+
+
+\begin{document}
+\begin{titlepage}
+
+\begin{center}
+{\Huge \bf Profitability of moving average trading strategies in the JSE top 40 share index. \vspace{1cm}
+
+\Large Literature review} \vspace{1cm}
+
+\today\\
+Herman Claassens (student number: CLSHER003)
+
+{\tt clsher003@myuct.ac.za}
+
+\end{center}
+\end{titlepage}
+
+\newpage
+
+\section{Introduction}
+The following literature review has been compiled with the hope of gaining an thorough understanding of the South African stock market, the methodologies used by technical traders and how to evaluate the effectiveness of a given trading strategy. More specifically, the review will focus on the use of moving average trading strategies within the South African stock market and the efficiency of the South African stock market. 
+
+\section{Background}
+Various trading strategies fall under the broad term of technical analysis. A technical analyst studies past prices in the hope of correctly predicting future prices. Technical analysis dates back to the 1800s and was widely used in the period prior to extensive disclosure of financial information. Although many early studies regarding technical analysis have concluded that it is useless, more recently it has undergone a renaissance (Brock, Lakonishok and LeBaron, 1992). Sweeney (1988) showed that filter trading rules can outperform the market. A popular tool among technical analysts is moving averages, which is a smoothing mechanism to view trends in time series data. Moving averages help analysts devise a strategy for buying and selling stocks. 
+
+
+
+
