@@ -1,0 +1,213 @@
+---
+# IMPORTANT: Change settings here, but DO NOT change the spacing. 
+# Remove comments and add values where applicable. 
+# The descriptions below should be self-explanatory
+
+title: "Profatability of moving average trading strategies in the Top40"
+#subtitle: "This will appear as Right Header"
+documentclass: "elsarticle"
+
+# Comment: ----- Follow this pattern for up to 5 authors
+Author1: "Herman Claassens"  # First Author
+
+
+
+
+# Comment: ----- Manage headers and footers:
+#BottomLFooter: $Title$
+#BottomCFooter:
+#TopLHeader: \leftmark # Adds section name at topleft. Remove comment to add it.
+BottomRFooter: "\\footnotesize Page \\thepage\\" # Add a '#' before this line to remove footer.
+addtoprule: TRUE
+addfootrule: TRUE               # Use if footers added. Add '#' to remove line.
+bibliographystyle: natbib
+bibliography: Tex/ref.bib       # Do not edit: Keep this naming convention and location.
+RemovePreprintSubmittedTo: FALSE  # Removes the 'preprint submitted to...' at bottom of titlepage
+Journal: "Journal of Finance"   # Journal that the paper will be submitting to, if above parameter is set to TRUE.
+toc: no                         # Add a table of contents
+numbersections: yes             # Should sections (and thus figures and tables) be numbered?
+fontsize: 12pt                  # Set fontsize
+linestretch: 1.5                # Set distance between lines.
+link-citations: TRUE            # This creates dynamic links to the papers in reference list.
+output:
+  pdf_document:
+    keep_tex: TRUE
+    template: Tex/TexDefault.txt
+    fig_width: 3.5 # Adjust default figure sizes. This can also be done in the chunks of the text.
+    fig_height: 3.5
+    includes:
+      in_header: Tex/packages.txt # Reference file with extra packages
+
+---
+
+<!-- First: Set your default preferences for chunk options: -->
+
+<!-- If you want a chunk's code to be printed, set echo = TRUE. message = FALSE stops R printing ugly package loading details in your final paper too. I also suggest setting warning = FALSE and checking for warnings in R, else you might find ugly warnings in your paper. -->
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, fig.width = 6, fig.height = 5, fig.pos="H", fig.pos = 'H')
+# Note: Include = FALSE implies the code is executed, but not printed in your pdf.
+# warning and message = FALSE implies ugly messages and warnings are removed from your pdf. These should be picked up when you execute the command chunks (code sections below) in your rmd, not printed in your paper!
+
+```
+
+
+<!-- ############################## -->
+<!-- # Start Writing here: -->
+<!-- ############################## -->
+
+# Introduction \label{Introduction}
+A technical analyst studies past prices in the hope of correctly predicting future prices. The success of a technical analyst depend heavily on the efficiency of the market in which he/she operates in. According to the efficient market hypothesis (EMH), share prices fully incorporate all relevant information, making the attempts of a technical analyst to predict future prices from past price history seem futile. Nonetheless, technical analysis is widely used among financial market practitioners. A popular tool amongst technical analysts is moving averages, which is a smoothing mechanism to view trends in time series data. Moving averages help analysts devise a strategy for buying and selling stocks. In this literature review it is hoped to gain a critical understanding of the techniques used by technical analysts, with specific reference to moving average trading strategies. The literature review will also help us better understand the efficiency of the South African investment environment and how to evaluate the effectiveness of a given trading rule. 
+
+
+
+# Efficient market hypothesis \label{Data}
+The EMH states that share prices fully incorporate all relevant information. If the flow of information is continuous and prices immediately adjust to new information then tomorrow's price changes will reflect only tomorrow's information. News, however, is unpredictable leading to the logic that price changes must also be unpredictable (Malkiel, 2003).
+
+  Fama (1970) suggested that the information set be described in more detail in order to test the statement that in efficient markets prices reflect all available information. In its weak form, the information set is restricted to past price history only. The semi-strong form defines the information set as all publicly available information. Finally, strong-form efficiency takes the information set to be all public and private information. 
+  
+  Fama (1970) reviewed emperical literature regarding efficient market models. The emperical work focusses on the adjustment of stock prices in the United States investment enviroment to the three information subsets. It was found that both weak and semi-strong form tests of the efficient market model supported the EMH. Fama (1970) also noted that specialist traders and corporate insiders had monopolistic access to information, which if traded on, would lead to trading profit. No evidence was found to suggest that this deviation from strong-form efficiency goes deeper down into the investment enviroment. 
+  
+  Mobarek, Mollah and Bhuyan (2008) analysed the weak form efficiency of emerging and less developed markets. They used the Dhaka stock exchange as representative of such a market and tested wether or not this market followes a random walk. The EMH in its weak form is related to the idea that stock prices follow a random walk, with stock prices moving in some random direction from its previous price. The random walk model assumes that the return series is normally distributed. The Kolmogrov-Smirnov Goodness of Fit test was used to check wether the returns series confirms to a normal distribution. The test showed that the returns do not follow a normal distribution. Another non-parametric test, the runs test, was also used to test for randomness. This test aslo concluded that the observed series was not a random series. Their findings supported the findings of several other studies, including that of Errunza and Losq (1985, cited by Mobarek, Mollah and Bhuyan, 2008), who concluded that developing stock markets are not as efficient as their developed counterparts. This gap in efficiency between developed and developing markets might possibly be explained by the lack of information disclosure requirements in developing markets (Mobarek, Mollah and Bhuyan, 2008).
+  
+  By using a GARCH approach with parameters varying over time,  Jefferis and Smith (2005) tested the evolving efficiency of the Johannesburg stock market between the early 1990's and June 2001. They found the Johannesburg stock exchange to be weak form efficient throughout the period. Their results contradict that of Roux and Gilbertson (1978) (reference in jefferis), who found weak form inefficiencies in the Johannesburg stock exchange. 
+  
+  Various difficulties arise when testing the EMH. Consider the joint hypothesis problem: when testing efficiency, we are jointly testing a specified pricing model. Therefore, if we do find inefficiencies it might be due to the fact that our pricing model is incorrect and not due to actual inefficiencies within a market. 
+
+
+#  Technical analysis
+A technical analyst studies past prices in the hope of correctly predicting future prices. Technical analysis dates back to the 1800s and was widely used in the period prior to extensive disclosure of financial information (Brock, Lakonishok and LeBaron, 1992). Although many early studies regarding technical analysis have concluded that it is not profitable, more recently technical analysis has undergone a renaissance (Brock, Lakonishok and LeBaron, 1992).
+
+Rather than being concerned with the fundamental economic properties of certain stocks, technical analysts focus on the movements of stock prices and the volume of trades. Dow theory forms the cornerstone of technical analysis and was introduced by Charles Henry Dow in 1884 in the United States. The theory suggests that the market moves in cyclical bull and bear trends. Identifying these trends is hindered by short term market fluctuations but, by analysing past fluctuations in the industrial and transportation indices, technical analysts are able to identify the primary market trend. The two indices mentioned in the theory above are know as the Dow-Jones averages. The transportation average consisted of 20 railroad company stocks. Railroad corporations where the dominant enterprises in America during the late 1800's when these indices were created. The industrial average contained stocks of all other types of businesses and originally contained only 12 stocks. Dow is often accredited as being the first person to express general market trends with respect to the average prices of a number of market representative stocks (Brown, Goetzmann and Kumar, 1998).  
+
+Technical analysts use a variety of graphic forms to convey information about past price data. The chart representation of a price series is as follows (Arratia, 2014):
+\begin{itemize}
+\item Line charts \newline
+The closing share prices of a given security or index plotted against time. This is the simplest way of viewing price movements. 
+\item Bar charts \newline
+A bar chart conveys more information about price changes over a given period. Each period of time is represented as a vertical line, with the top indicating the highest price of the share during the period and the bottom showing the lowest price. A horisontal line connected to the right of the vertical line indicates the closing share price, whereas a horisontal line to the left indicates the opening share price.
+\item Candlestick charts \newline
+The candlestick representation conveys information about a stocks opening, closing, highest and lowest price as well as the relationship between the opening and the closing price. The information is depicted in a candlestick consisting of a square body with vertical lines connected to the top and bottom of the body. The top(bottom) of the vertical lines indicate the highest(lowest) share price. The top and bottom boundaries of the candle body shows the opening and closing prices of the stock. If the opening price is higher than the closing price, then the bottom boundary represents the closing price and the body of the candle is coloured red. Naturally the order changes if the closing price is higher than the opening price and the body is coloured green. 
+
+<!--how to reference a section-->
+
+\end{itemize}
+
+A technical trading rule can be described as a mathematical indicator function that takes price as its input (sometimes paired with other relevant information such as trading volume), and returns a value which helps us predict the direction of the price change (Arratia, 2014). Some of the more popular trading rules include level crossing, pattern recognition and moving averages. Level crossing strategies consider boundaries (high or low) on the price series over a given period. Buy or sell signals are generated when the price series crosses these limits. Pattern  recognition involves recognising a pattern in a given period of the price series ending at the current price and then generating a buy or sell signal. Moving average rules consider two or more moving averages of varied lengths on the observed price series. Buy or sell signals are generated when these moving averages cross each other (Arratia, 2014).  
+
+#Moving averages
+
+The moving average (MA) of a stocks price over $n$ time periods up to time $t$ is defined as follows (Sobreiro et al. 2016):
+
+$$SMA(n)_t=\sum_{i = 0}^{n-1}P_{t-i}$$
+
+<!--reference section-->
+Where $P_t$ represents the closing share price at time $t$.\newline
+The above moving average is a simple moving average (SMA) and more complex variations of moving averages such as the weighted moving average, Kaufman's adaptive moving average and the variable index dynamic average also exist. The most popular moving averages amongst market practitioners are the exponential moving average (EMA) and the SMA (Sobreiro et al. 2016). The EMA is defined as follows: 
+$$EMA(n)_t= (\frac{2}{k+1}).P_{t-1}+(1-((\frac{2}{k+1})).EMA(n)$$
+Where:\newline
+\indent $k$ is the number of periods.\newline
+\indent $n$ is the relative position of the current period observed.\newline
+\indent $P_t$ is the closing share price in the previous period.\newline
+\indent $EMA(n-1)$ is the $EMA$ calculated for the previous period.
+
+Attaria (2014) provides a good explanation of how moving averages can lead to buy and sell signals:
+For each time $t$, consider a simple moving average of $n$ days, up to time $t$. Denote this moving average by $SMA(n)_t$. Define another moving average $SMA(m)_t$, with $m>n$. Now consider the following process: $$X_t=SMA(n)_t-SMA(m)_t$$
+This process will be observed through a sequence of times $t_0<t_1<...<t_i<...$ i.e. we start observing the process at time $t=t_0$. Then whenever $X_{t_i}$ (for some $i>0$) changes sign, we will makes trades according to the following rule:
+\begin{itemize}
+\item Buy shares at time $t_{i+1}$ if $X_{t_{i-1}}<0$ and $X_{t_i}>0$
+\item Sell shares at time $t_{i+1}$ if $X_{t_{i-1}}>0$ and $X_{t_i}<0$
+
+\end{itemize}
+
+Brock, Lakonishok and LeBaron (1992) found that SMA trading rules had predictive powers when applied to the Dow Jones Index between the years 1897 and 1986. They tested several long/short moving average combinations. The following moving averages were tested: 1-50, 1-150, 5-150, 1-200, and 2-200, where the first digit refers to the number of days in the short period and the second digit refers to the number of days in the long period. Buy(Sell) signals were generated when the short moving average cuts the long moving average from below(above). Each of the combinations were also tested after the introduction of a band. A band was introduced around the moving average to avoid signals when the short and long period moving averages were close. With the introduction of the 1% band, buy(sell) signals are generated when the short moving average is above the long moving average by an amount greater than the band. When the band equals zero, every day within our period of interest is classified as either a buy or a sell. This is refered to as a variable length moving average (VLMA) trading strategy. A fixed length moving average trading strategy was also tested, whereby the return over a 10 day holding period is calculated after a buy signal has been generated.All other signals during this 10 day period is ignored. The results were strongly in favour of the trading rules tested. It was found that the average return over a 10 day period between a buy and a sell signal was 0.8% compared to a average market return over the same period of 0.17%. This study did not take into account trading costs on transactions and perhaps we should not be too quick to accept its results.
+
+Hudson et al. (1996) did a similar study to that of Brock, Lakonishok and LeBaron (1992). They tested wether the findings of Brock, Lakonishok and LeBaron (1992) were reproduceable in a UK setting. The following moving averages were tested: 1-50, 1-150, 1-200, 5-150 and 1-50-0.01 (where the third digit refers to the size of the band used). By applying the same variable-and fixed length moving average trading rules, as was used by Brock, Lakonishok and LeBaron (1992), to the Financial Times Industrial Ordinary Index from 1935 to 1994, they found similar results to that of Brock, Lakonishok and LeBaron (1992). Furthermore, they concluded that if transaction costs are to be taken into account, these trading rules would not outperform a simple buy-and-hold strategy. Note that both these studies used data from share indices over more than fifty years. Would the same results have been attained had shorter periods of share indices been considerd?  
+
+More recently, Sobreiro et al. (2016) analysed the performance of three MA combinations according to a VLMA trading strategy when applied to the stock price histories of BRICS countries and other emerging markets. They tested the following MA scenarios: SMA-EMA, SMA-SMA and EMA-EMA. The short periods were described as: $k_{short} \in \mathbb{N} \mid 10\leq k_{short} \leq 50$, while the long periods were: $k_{long} \in \mathbb{N} \mid 100\leq k_{long} \leq 150$. Sobreiro et al. (2016) did not include a band in their analysis. Each long-short combination for each MA scenario was tested over a period from 2000 to 2015. The results of Sobreiro et al. (2016)  were not as conclusive as both of the before mentioned studies w.r.t. wether or not the trading stratiegies used outperformed the market. They do however provide useful insight into which MA scenario performed best. The SMA-SMA provided the best risk and return ratio. It is interesting to note that Sobreiro et al. (2016) foccused on testing a large variety of long-short MA combinations over a relatively short period of time compared to that of both Hudson et al. (1996) and Brock, Lakonishok and LeBaron (1992). However, due to the large number of MA combinations tested on the same data set, it is possible that this study falls victim to data-snooping. Another limitation of this study is that it also failed to take into account transaction costs on simulated trades.  
+
+A study by Chan and Bessembinder (1995) assessed whether or not changes in several Asian stock market indices could be predicted by simple technical analysis. Indices in Japan, South Korea, Hong Kong, Taiwan, Thailand, and Malaysia were observed. They tested the same trading rules as Brock, Lakonishok and LeBaron (1992). Chan and Bessembinder (1995) found that the trading rules had predictive powers in all of the indices observed but, the predictability was highest in Taiwan, Thailand, and Malaysia. They also determined that on average a 1.57% round-trip transactions costs would eliminate any trading profit.
+
+There is certainly not a lack of literature concerned with the profitability of moving average trading strategies. Most of the literature, however, focusses on only simple-and exponential moving averages. Another gap in the literature exists when searching for studies where trading costs are included in the analysis.
+
+
+<!--referencing a source from another source, they dont use in and out of sample, mention later-->
+
+  
+
+# Evaluating trading rules
+In their study, Allen and Karjalainen (1993) used a genetic algorithm to find a technical trading rule for Standard and Poor's Composite Stock Index between 1963 and 1989. They defined their fitness measure to be excess returns over a buy-and-hold strategy. The period of interest is devided into a training period and a out-of-sample test period. The days in the training period are then further split up into 'in the market' periods and 'out of the market' periods, where we earn the market return when we are 'in' the market and the risk free rate when we are 'out' of the market. The fitness of the rule is then determined by calculating the total return of the trading rule over the training period and subtracting the return on the buy-and-hold portfolio over the training period and also the  trading costs over the period. 
+
+The following methodology was used by Allen and Karjalainen (1993) to compute excess returen over a given period:
+
+The effectice return for a single trade, where we buy at time $b_i$ and sell at date $s_i$ is:
+
+
+$\begin{aligned}
+\pi_i &=\frac{P_{s_i}}{P_{b_i}}.\frac{1-c}{1+c}-1 \\
+      &=\exp[{\sum_{t={b_i}+1}^{s_i}r_t}].\frac{1-c}{1+c}-1\\
+      &=\exp[{\sum_{t={b_i}+1}^{s_i}r_t}+log(\frac{1-c}{1+c})]-1
+\end{aligned}$
+
+
+$P_t$ denotes the closing index value at time $t$. The daily continously compounded returns is $r_t$ and is equal to $log(P-t)-log(p_{t-1})$. One way transaction costs are expresse as a fraction of the price and is denotes by $c$.
+
+Assume the total number of trading days is equal to $T$. The risk free rate observed in the market at any point $t$ is given by $r_f(t)$. Let $I_b(t)$ and $I_s(t)$ be two indicator variables equal to one if our trading rule return a 'buy' or 'sell' signal respectively, at time $t$ and zero otherwise. These indicator variables thus satisfy the equation: $I_b(t) \times I_s(t)=0 \quad \forall  t$. The total number of trades over the period is given by $n$ i.e. the number of 'buy' signals followed by a 'sell' signal. On the last trading day of the period, any open positions are closed. The continuously compounded return for the trading rule can be calculated as follows:\newline
+
+$\begin{aligned}
+r=\sum_{i=1}^{T}r_t \times I_b(t) + \sum_{i=1}^{T}r_f(t)+nlog(\frac{1-c}{1+c})
+\end{aligned}$ \newline
+
+The return on the buy-and-hold portfolio is:\newline
+
+$\begin{aligned}
+r_{bh}=\sum_{i=1}^{T}r_t + log(\frac{1-c}{1+c}) \newline
+\end{aligned}$ \newline
+
+Excess returns are then given by:\newline
+
+$\begin{aligned}
+\Delta{r}=r-r_{bh}
+\end{aligned}$ \newline
+
+Allen and Karjalainen (1993) describe the data-snooping issue when designing the genetic algorithm. When applying tehnical trading rules one assumes price changes are not random but rather, that there are some regularities in the data. However, the training period data may have patterns that arise due to noise. The difficulty lies in finding a trading rule that generalises beyond the training period. A possible solutin to overfitting the training data would be to reserve a portion of the data to test the  predictions on. 
+Data snooping also occurs when a given data set is used more than once for model selection or inference purposes. Any adequate results obtained may be due to chance and not due to the merit of the method used (Sullivan, Timmermann and White, 1999).  Jensen and Bennington (1970) refer to data-snooping as "selection bias" and describe it as follows: "given enough computer time, we are sure that we can find a mechanical trading rule which 'works' on a table of random numbers-provided of course that we are allowed to test the rule on the same table of numbers which we used to discover the rule."(page number?, check referencing, reference in sullivan white.)
+
+
+\newpage
+
+#Referenes
+
+Malkiel, B.G. 2003. The Efficient Market Hypothesis and Its Critics. \textit{The Journal of Economic Perspectives.} 17(1):  59-82.  Available: http://www.jstor.org/stable/3216840 [2017, April 30]
+
+Fama, E.F. 1970. Efficient Capital Markets: A Review of Theory and Empirical Work. \textit{The Journal of Finance.} 25(2): 28-30. DOI: 10.2307/2325486.
+
+Mobarek, A. Mollah, A.S. and Bhuyan, R. 2008. Market efficiency in emerging stock market: evidence from Bangladesh. \textit{Journal of Emerging Market Finance.} 7(1): 17-41. DOI: 10.1177/097265270700700102 
+
+Jefferis, K. Smith, G. 2005. The changing efficiency of African stock markets. \textit{South African Journal of Economics} 73(1): 54-67. DOI:10.1111/j.1813-6982.2005.00004.x  
+
+Brock, W. Lakonishok, J. and LeBaron, B. 1992. Simple Technical Trading Rules and the Stochastic Properties of Stock Returns. \textit{The Journal of Finance.} 47(5): 1731-1764. DOI: 10.2307/2328994.
+
+Brown, S.J. Goetzmann, W.N. and Kumar, A. 1998. The Dow theory: William Peter Hamilton's track record reconsidered. \textit{The Journal of finance.} 53(4): 1311-1333. Available:  http://www.jstor.org/stable/117403  [2017, May 26]
+
+Arratia, A., 2014. Trade on Pattern Mining or Value Estimation. \textit{In Computational Finance.} 177-206. Atlantis Press.
+
+Hudson, R. Dempsey, M. and Keasey, K. 1996. A note on the weak form efficiency of capital markets: The application of simple technical trading rules to UK stock prices-1935 to 1994. \textit{Journal of Banking and Finance.} 20(6): 1121-1132. DOI: https://doi.org/10.1016/0378-4266(95)00043-7
+
+Sobreiro, V.A. da Costa, T.R.C.C. Nazário, R.T.F. e Silva, J.L. Moreira, E.A. Lima Filho, M.C. Kimura, H. and Zambrano, J.C.A. 2016. The profitability of moving average trading rules in BRICS and emerging stock markets. \textit{The North American Journal of Economics and Finance.} 38: 86-101. DOI: https://doi.org/10.1016/j.najef.2016.08.003
+
+Bessembinder, H. Chan, K. 1995. The profitability of technical trading rules in the Asian stock markets. \textit{Pacific-Basin Finance Journal.} 3(2): 257-284. DOI: https://doi.org/10.1016/0927-538X(95)00002-3
+
+Allen, F. Karjalainen, R. 1999. Using genetic algorithms to find technical trading rules. \textit{Journal of financial Economics.} 51(2): 245-271. DOI: https://doi-org.ezproxy.uct.ac.za/10.1016/S0304-405X(98)00052-X
+
+Sullivan, R. Timmermann, A. and White, H. 1999. Data‐snooping, technical trading rule performance, and the bootstrap. \textit{The journal of Finance.} 54(5): 1647-1691. DOI: 10.1111/0022-1082.00163
+
+
+
+
+
+
+
+
+
+
